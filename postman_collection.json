@@ -1,0 +1,866 @@
+{
+  "info": {
+    "name": "MCP HTTP Server",
+    "description": "Collection with automatic JWT token management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-login if token is missing or expired",
+          "const tokenExpiry = pm.collectionVariables.get('token_expiry');",
+          "const now = Date.now();",
+          "",
+          "if (!pm.collectionVariables.get('auth_token') || (tokenExpiry && now > tokenExpiry)) {",
+          "    console.log('Token missing or expired, fetching new token...');",
+          "    ",
+          "    const loginRequest = {",
+          "        url: pm.collectionVariables.get('base_url') + '/auth/login',",
+          "        method: 'POST',",
+          "        header: {",
+          "            'Content-Type': 'application/json'",
+          "        },",
+          "        body: {",
+          "            mode: 'raw',",
+          "            raw: JSON.stringify({",
+          "                username: pm.collectionVariables.get('username'),",
+          "                password: pm.collectionVariables.get('password')",
+          "            })",
+          "        }",
+          "    };",
+          "    ",
+          "    pm.sendRequest(loginRequest, (err, response) => {",
+          "        if (err) {",
+          "            console.error('Login failed:', err);",
+          "        } else {",
+          "            const jsonResponse = response.json();",
+          "            pm.collectionVariables.set('auth_token', jsonResponse.token);",
+          "            // Set expiry to 23 hours from now (token expires in 24h)",
+          "            pm.collectionVariables.set('token_expiry', now + (23 * 60 * 60 * 1000));",
+          "            console.log('Token fetched successfully');",
+          "        }",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "testuser",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "demo-password",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "token_expiry",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "oauth_access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "oauth_refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "oauth_token_expiry",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "oauth_client_id",
+      "value": "mcp-vscode-client",
+      "type": "string"
+    },
+    {
+      "key": "oauth_client_secret",
+      "value": "mcp-secret-change-this",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "OAuth2",
+      "item": [
+        {
+          "name": "OAuth Authorization",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/oauth/authorize?client_id=mcp-vscode-client&redirect_uri=http://localhost:8080/callback&state=xyz&response_type=code",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "authorize"],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "mcp-vscode-client"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "http://localhost:8080/callback"
+                },
+                {
+                  "key": "state",
+                  "value": "xyz"
+                },
+                {
+                  "key": "response_type",
+                  "value": "code"
+                }
+              ]
+            },
+            "description": "Get authorization code for OAuth2 flow"
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Token Exchange",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('oauth_access_token', jsonData.access_token);",
+                  "    pm.collectionVariables.set('oauth_refresh_token', jsonData.refresh_token);",
+                  "    pm.collectionVariables.set('oauth_token_expiry', Date.now() + (jsonData.expires_in * 1000));",
+                  "    pm.test('Token exchange successful', () => {",
+                  "        pm.expect(jsonData.access_token).to.be.a('string');",
+                  "        pm.expect(jsonData.token_type).to.equal('Bearer');",
+                  "        pm.expect(jsonData.expires_in).to.be.a('number');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"YOUR_AUTH_CODE\",\n  \"client_id\": \"mcp-vscode-client\",\n  \"client_secret\": \"mcp-secret-change-this\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "token"]
+            },
+            "description": "Exchange authorization code for access token"
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('oauth_access_token', jsonData.access_token);",
+                  "    pm.test('Token refresh successful', () => {",
+                  "        pm.expect(jsonData.access_token).to.be.a('string');",
+                  "        pm.expect(jsonData.token_type).to.equal('Bearer');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"refresh_token\",\n  \"refresh_token\": \"{{oauth_refresh_token}}\",\n  \"client_id\": \"mcp-vscode-client\",\n  \"client_secret\": \"mcp-secret-change-this\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "token"]
+            },
+            "description": "Refresh an expired access token"
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Authorization with PKCE",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/oauth/authorize?client_id=mcp-vscode-client&redirect_uri=http://localhost:8080/callback&state=xyz&response_type=code&code_challenge=YOUR_CODE_CHALLENGE&code_challenge_method=S256",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "authorize"],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "mcp-vscode-client"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "http://localhost:8080/callback"
+                },
+                {
+                  "key": "state",
+                  "value": "xyz"
+                },
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "code_challenge",
+                  "value": "YOUR_CODE_CHALLENGE"
+                },
+                {
+                  "key": "code_challenge_method",
+                  "value": "S256"
+                }
+              ]
+            },
+            "description": "OAuth2 authorization with PKCE for enhanced security"
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Token Exchange with PKCE",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"YOUR_AUTH_CODE\",\n  \"client_id\": \"mcp-vscode-client\",\n  \"client_secret\": \"mcp-secret-change-this\",\n  \"code_verifier\": \"YOUR_CODE_VERIFIER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "token"]
+            },
+            "description": "Exchange authorization code for access token with PKCE"
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Server Metadata",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('OAuth metadata retrieved', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.issuer).to.be.a('string');",
+                  "    pm.expect(jsonData.authorization_endpoint).to.be.a('string');",
+                  "    pm.expect(jsonData.token_endpoint).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/.well-known/oauth-authorization-server",
+              "host": ["{{base_url}}"],
+              "path": [".well-known", "oauth-authorization-server"]
+            },
+            "description": "Get OAuth2 server configuration and metadata"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "    pm.collectionVariables.set('token_expiry', Date.now() + (23 * 60 * 60 * 1000));",
+                  "    pm.test('Login successful', () => {",
+                  "        pm.expect(jsonData.token).to.be.a('string');",
+                  "        pm.expect(jsonData.username).to.equal(pm.collectionVariables.get('username'));",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login to get JWT token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is healthy', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.equal('healthy');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check server health (no auth required)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Streaming",
+      "item": [
+        {
+          "name": "Stream Data (5 items)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stream?count=5",
+              "host": ["{{base_url}}"],
+              "path": ["stream"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "5",
+                  "description": "Number of items to stream"
+                }
+              ]
+            },
+            "description": "Stream data with Server-Sent Events (auto-auth)"
+          },
+          "response": []
+        },
+        {
+          "name": "Stream Data (10 items)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stream?count=10",
+              "host": ["{{base_url}}"],
+              "path": ["stream"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Stream more items"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MCP Tools",
+      "item": [
+        {
+          "name": "List Tools",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tools listed successfully', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.result.tools).to.be.an('array');",
+                  "    pm.expect(jsonData.result.tools.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "List all available MCP tools"
+          },
+          "response": []
+        },
+        {
+          "name": "Call Tool - stream_data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tool call successful', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.result).to.be.an('object');",
+                  "    pm.expect(jsonData.result.content).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"stream_data\",\n    \"arguments\": {\n      \"count\": 5\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Call the stream_data tool"
+          },
+          "response": []
+        },
+        {
+          "name": "Call Tool - process_request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"process_request\",\n    \"arguments\": {\n      \"action\": \"test_action\",\n      \"data\": \"sample data for processing\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Call the process_request tool"
+          },
+          "response": []
+        },
+        {
+          "name": "Call Tool - calculator (add)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Calculator addition works', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.result).to.be.an('object');",
+                  "    const result = JSON.parse(jsonData.result.content[0].text);",
+                  "    pm.expect(result.result).to.equal(15);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"calculator\",\n    \"arguments\": {\n      \"operation\": \"add\",\n      \"a\": 10,\n      \"b\": 5\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Calculate 10 + 5"
+          },
+          "response": []
+        },
+        {
+          "name": "Call Tool - calculator (divide)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 5,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"calculator\",\n    \"arguments\": {\n      \"operation\": \"divide\",\n      \"a\": 100,\n      \"b\": 4\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Calculate 100 ÷ 4"
+          },
+          "response": []
+        },
+        {
+          "name": "Call Tool - calculator (multiply)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 6,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"calculator\",\n    \"arguments\": {\n      \"operation\": \"multiply\",\n      \"a\": 7,\n      \"b\": 8\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Calculate 7 × 8"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "Unauthorized Access",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Unauthorized request rejected', () => {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stream?count=1",
+              "host": ["{{base_url}}"],
+              "path": ["stream"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Try to access protected endpoint without token"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Invalid token rejected', () => {",
+                  "    pm.expect(pm.response.code).to.equal(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "invalid-token-here",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stream?count=1",
+              "host": ["{{base_url}}"],
+              "path": ["stream"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Try to use an invalid token"
+          },
+          "response": []
+        },
+        {
+          "name": "Unknown Tool",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"unknown_tool\",\n    \"arguments\": {}\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Try to call a non-existent tool"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid OAuth Client",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Invalid client rejected', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"some_code\",\n  \"client_id\": \"invalid_client\",\n  \"client_secret\": \"invalid_secret\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "token"]
+            },
+            "description": "Try OAuth token exchange with invalid credentials"
+          },
+          "response": []
+        },
+        {
+          "name": "Expired Authorization Code",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"expired_or_invalid_code\",\n  \"client_id\": \"mcp-vscode-client\",\n  \"client_secret\": \"mcp-secret-change-this\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": ["{{base_url}}"],
+              "path": ["oauth", "token"]
+            },
+            "description": "Try to exchange an expired or invalid authorization code"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
