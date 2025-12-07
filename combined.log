@@ -330,3 +330,98 @@
 {"level":"info","message":"User authenticated","timestamp":"2025-12-07T05:25:30.480Z","userId":"user-7f590e88cae86410"}
 {"id":2,"level":"info","message":"MCP request received","method":"tools/list","timestamp":"2025-12-07T05:25:30.480Z","userId":"user-7f590e88cae86410"}
 {"id":2,"level":"info","message":"MCP request completed successfully","method":"tools/list","timestamp":"2025-12-07T05:25:30.481Z"}
+{"level":"info","message":"Shutting down server","timestamp":"2025-12-07T05:51:15.867Z"}
+{"level":"info","message":"MCP server connected via stdio","timestamp":"2025-12-07T05:52:03.423Z"}
+{"level":"info","message":"MCP HTTP server started","port":3000,"timestamp":"2025-12-07T05:52:03.427Z"}
+{"clientId":"mcp-vscode-client","clientSecret":"mcp-secret-change-this","level":"info","message":"OAuth Client Credentials:","timestamp":"2025-12-07T05:52:03.428Z"}
+{"authorize":"http://localhost:3000/oauth/authorize","health":"http://localhost:3000/health","level":"info","mcp":"http://localhost:3000/mcp","message":"Available endpoints:","timestamp":"2025-12-07T05:52:03.428Z","token":"http://localhost:3000/oauth/token"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T05:52:11.001Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T05:52:11.002Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T05:52:11.009Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T05:52:11.015Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T05:52:11.019Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/oauth/token","timestamp":"2025-12-07T05:52:11.025Z"}
+{"client_id":"mcp-vscode-client","grant_type":"refresh_token","level":"info","message":"OAuth token request","timestamp":"2025-12-07T05:52:11.026Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T05:52:11.033Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T05:52:11.036Z","userId":"user-8e84d3762a580a37"}
+{"id":1,"level":"info","message":"MCP request received","method":"initialize","timestamp":"2025-12-07T05:52:11.037Z","userId":"user-8e84d3762a580a37"}
+{"id":1,"level":"info","message":"MCP request completed successfully","method":"initialize","timestamp":"2025-12-07T05:52:11.038Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T05:52:11.043Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T05:52:11.044Z","userId":"user-8e84d3762a580a37"}
+{"level":"info","message":"MCP request received","method":"notifications/initialized","timestamp":"2025-12-07T05:52:11.045Z","userId":"user-8e84d3762a580a37"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T05:52:11.046Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/mcp","timestamp":"2025-12-07T05:52:11.047Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T05:52:11.049Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T05:52:11.050Z","userId":"user-8e84d3762a580a37"}
+{"id":2,"level":"info","message":"MCP request received","method":"tools/list","timestamp":"2025-12-07T05:52:11.050Z","userId":"user-8e84d3762a580a37"}
+{"id":2,"level":"info","message":"MCP request completed successfully","method":"tools/list","timestamp":"2025-12-07T05:52:11.051Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:14:02.747Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T06:14:02.748Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T06:14:02.758Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T06:14:02.762Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T06:14:02.765Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/oauth/token","timestamp":"2025-12-07T06:14:02.775Z"}
+{"client_id":"mcp-vscode-client","grant_type":"refresh_token","level":"info","message":"OAuth token request","timestamp":"2025-12-07T06:14:02.775Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:14:05.860Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T06:14:05.861Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T06:14:05.865Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T06:14:05.867Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T06:14:05.870Z"}
+{"level":"info","message":"Shutting down server","timestamp":"2025-12-07T06:14:13.581Z"}
+{"level":"info","message":"MCP server connected via stdio","timestamp":"2025-12-07T06:18:07.649Z"}
+{"level":"info","message":"MCP HTTP server started","port":3000,"timestamp":"2025-12-07T06:18:07.654Z"}
+{"clientId":"mcp-vscode-client","clientSecret":"mcp-secret-change-this","level":"info","message":"OAuth Client Credentials:","timestamp":"2025-12-07T06:18:07.654Z"}
+{"authorize":"http://localhost:3000/oauth/authorize","health":"http://localhost:3000/health","level":"info","mcp":"http://localhost:3000/mcp","message":"Available endpoints:","timestamp":"2025-12-07T06:18:07.655Z","token":"http://localhost:3000/oauth/token"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:20:01.487Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T06:20:01.488Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T06:20:01.495Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T06:20:01.500Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T06:20:01.506Z"}
+{"level":"info","message":"Shutting down server","timestamp":"2025-12-07T06:21:24.688Z"}
+{"level":"info","message":"MCP server connected via stdio","timestamp":"2025-12-07T06:21:57.421Z"}
+{"level":"info","message":"MCP HTTP server started","port":3000,"timestamp":"2025-12-07T06:21:57.426Z"}
+{"clientId":"mcp-vscode-client","clientSecret":"mcp-secret-change-this","level":"info","message":"OAuth Client Credentials:","timestamp":"2025-12-07T06:21:57.426Z"}
+{"authorize":"http://localhost:3000/oauth/authorize","health":"http://localhost:3000/health","level":"info","mcp":"http://localhost:3000/mcp","message":"Available endpoints:","timestamp":"2025-12-07T06:21:57.427Z","token":"http://localhost:3000/oauth/token"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:22:15.153Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T06:22:15.154Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T06:22:15.161Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T06:22:15.165Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T06:22:15.168Z"}
+{"ip":"::1","level":"info","message":"Incoming request","method":"GET","path":"/oauth/authorize","timestamp":"2025-12-07T06:22:16.982Z"}
+{"client_id":"mcp-vscode-client","level":"info","message":"OAuth authorization request","redirect_uri":"http://127.0.0.1:33418/","timestamp":"2025-12-07T06:22:16.983Z"}
+{"code":"155d51b22dabf6e0129f1e4ed6577ef2f8e255e4c16bf5f8ecd4f3a47e215213","level":"info","message":"Authorization code generated","timestamp":"2025-12-07T06:22:16.985Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/oauth/token","timestamp":"2025-12-07T06:22:17.034Z"}
+{"client_id":"mcp-vscode-client","grant_type":"authorization_code","level":"info","message":"OAuth token request","timestamp":"2025-12-07T06:22:17.034Z"}
+{"level":"info","message":"Tokens generated","timestamp":"2025-12-07T06:22:17.047Z","userId":"user-55a88b324f53f291"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:22:17.138Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:22:17.142Z","userId":"user-55a88b324f53f291"}
+{"id":1,"level":"info","message":"MCP request received","method":"initialize","timestamp":"2025-12-07T06:22:17.143Z","userId":"user-55a88b324f53f291"}
+{"id":1,"level":"info","message":"MCP request completed successfully","method":"initialize","timestamp":"2025-12-07T06:22:17.146Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/mcp","timestamp":"2025-12-07T06:22:17.245Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:22:17.249Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:22:17.250Z","userId":"user-55a88b324f53f291"}
+{"level":"info","message":"MCP request received","method":"notifications/initialized","timestamp":"2025-12-07T06:22:17.251Z","userId":"user-55a88b324f53f291"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T06:22:17.252Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:22:17.281Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:22:17.282Z","userId":"user-55a88b324f53f291"}
+{"id":2,"level":"info","message":"MCP request received","method":"tools/list","timestamp":"2025-12-07T06:22:17.282Z","userId":"user-55a88b324f53f291"}
+{"id":2,"level":"info","message":"MCP request completed successfully","method":"tools/list","timestamp":"2025-12-07T06:22:17.284Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:23:30.525Z"}
+{"level":"warn","message":"Authentication failed: No token provided","timestamp":"2025-12-07T06:23:30.526Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource/mcp","timestamp":"2025-12-07T06:23:30.531Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-protected-resource","timestamp":"2025-12-07T06:23:30.535Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/.well-known/oauth-authorization-server","timestamp":"2025-12-07T06:23:30.538Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:23:30.580Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:23:30.581Z","userId":"user-55a88b324f53f291"}
+{"id":1,"level":"info","message":"MCP request received","method":"initialize","timestamp":"2025-12-07T06:23:30.581Z","userId":"user-55a88b324f53f291"}
+{"id":1,"level":"info","message":"MCP request completed successfully","method":"initialize","timestamp":"2025-12-07T06:23:30.582Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"GET","path":"/mcp","timestamp":"2025-12-07T06:23:30.589Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:23:30.591Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:23:30.591Z","userId":"user-55a88b324f53f291"}
+{"level":"info","message":"MCP request received","method":"notifications/initialized","timestamp":"2025-12-07T06:23:30.592Z","userId":"user-55a88b324f53f291"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T06:23:30.592Z"}
+{"ip":"::ffff:127.0.0.1","level":"info","message":"Incoming request","method":"POST","path":"/mcp","timestamp":"2025-12-07T06:23:30.595Z"}
+{"level":"info","message":"User authenticated","timestamp":"2025-12-07T06:23:30.595Z","userId":"user-55a88b324f53f291"}
+{"id":2,"level":"info","message":"MCP request received","method":"tools/list","timestamp":"2025-12-07T06:23:30.595Z","userId":"user-55a88b324f53f291"}
+{"id":2,"level":"info","message":"MCP request completed successfully","method":"tools/list","timestamp":"2025-12-07T06:23:30.596Z"}
+{"level":"info","message":"Shutting down server","timestamp":"2025-12-07T06:24:17.398Z"}

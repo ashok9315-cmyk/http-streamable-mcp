@@ -157,6 +157,20 @@ mcpServer.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["operation", "a", "b"],
         },
       },
+      {
+        name: "get_cdd_alerts",
+        description: "Tool to get CDD alerts for given user ID",
+        inputSchema: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              description: "The ID of CDD user",
+            },
+          },
+          required: ["id"],
+        },
+      },
     ],
   };
 });
@@ -273,6 +287,54 @@ mcpServer.setRequestHandler(CallToolRequestSchema, async (request) => {
             },
           ],
         };
+      }
+
+      case "get_cdd_alerts": {
+        const { id } = args as { id: string };
+
+        logger.info("Getting overdue CDD alerts", { userId: id });
+
+        if (!id || typeof id !== "string") {
+          throw new Error("User ID is required and must be a string");
+        }
+
+        try {
+          const response = await fetch(
+            `http://56e1097b-9ab1-4561-bdf0-155b380dbace.mock.pstmn.io/user/alertdetails/${id}`
+          );
+          const data = await response.json();
+
+          if (!data || Object.keys(data).length === 0) {
+            logger.warn("No alerts found", { userId: id });
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `ID ${id} not found.`,
+                },
+              ],
+            };
+          }
+
+          logger.info("Overdue CDD alerts retrieved", { userId: id });
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(data, null, 2),
+              },
+            ],
+          };
+        } catch (error) {
+          logger.error("Error fetching CDD alerts", {
+            userId: id,
+            error: error instanceof Error ? error.message : String(error),
+          });
+          throw new Error(
+            `Failed to fetch alerts for ID ${id}: ${error instanceof Error ? error.message : String(error)}`
+          );
+        }
       }
 
       default:
@@ -556,6 +618,20 @@ app.post("/mcp", authenticateToken, async (req: AuthRequest, res: Response) => {
                 required: ["operation", "a", "b"],
               },
             },
+            {
+              name: "get_cdd_alerts",
+              description: "Tool to get CDD alerts for given user ID",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  id: {
+                    type: "string",
+                    description: "The ID of CDD user",
+                  },
+                },
+                required: ["id"],
+              },
+            },
           ],
         };
         break;
@@ -674,6 +750,56 @@ app.post("/mcp", authenticateToken, async (req: AuthRequest, res: Response) => {
                 },
               ],
             };
+            break;
+          }
+
+          case "get_cdd_alerts": {
+            const { id } = args as { id: string };
+
+            logger.info("Getting overdue CDD alerts", { userId: id });
+
+            if (!id || typeof id !== "string") {
+              throw new Error("User ID is required and must be a string");
+            }
+
+            try {
+              const response = await fetch(
+                `http://56e1097b-9ab1-4561-bdf0-155b380dbace.mock.pstmn.io/user/alertdetails/${id}`
+              );
+              const data = await response.json();
+
+              if (!data || Object.keys(data).length === 0) {
+                logger.warn("No alerts found", { userId: id });
+                result = {
+                  content: [
+                    {
+                      type: "text",
+                      text: `ID ${id} not found.`,
+                    },
+                  ],
+                };
+                break;
+              }
+
+              logger.info("Overdue CDD alerts retrieved", { userId: id });
+
+              result = {
+                content: [
+                  {
+                    type: "text",
+                    text: JSON.stringify(data, null, 2),
+                  },
+                ],
+              };
+            } catch (error) {
+              logger.error("Error fetching CDD alerts", {
+                userId: id,
+                error: error instanceof Error ? error.message : String(error),
+              });
+              throw new Error(
+                `Failed to fetch alerts for ID ${id}: ${error instanceof Error ? error.message : String(error)}`
+              );
+            }
             break;
           }
 

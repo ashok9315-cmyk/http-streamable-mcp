@@ -677,6 +677,44 @@
             "description": "Calculate 7 × 8"
           },
           "response": []
+        },
+        {
+          "name": "Call Tool - get_cdd_alerts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('CDD alerts retrieved successfully', () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.result).to.be.an('object');",
+                  "    pm.expect(jsonData.result.content).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 7,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_cdd_alerts\",\n    \"arguments\": {\n      \"id\": \"user123\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/mcp",
+              "host": ["{{base_url}}"],
+              "path": ["mcp"]
+            },
+            "description": "Get CDD alerts for a user"
+          },
+          "response": []
         }
       ]
     },

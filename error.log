@@ -12,3 +12,6 @@
 {"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T05:15:46.550Z"}
 {"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T05:24:26.500Z"}
 {"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T05:25:30.478Z"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T05:52:11.046Z"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T06:22:17.252Z"}
+{"error":"Unsupported method: notifications/initialized","level":"error","message":"MCP request failed","method":"notifications/initialized","timestamp":"2025-12-07T06:23:30.592Z"}
